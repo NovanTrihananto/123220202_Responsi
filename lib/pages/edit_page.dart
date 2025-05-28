@@ -43,7 +43,7 @@ class _EditFilmPageState extends State<EditFilmPage> {
       } else if (snapshot.hasData) {
         if (!_isDataLoaded) {
           _isDataLoaded = true;
-          Film film = snapshot.data!;  // langsung Film, bukan Map
+          Film film = snapshot.data!; 
           title.text = film.title!;
           year.text = film.year!.toString();
           rating.text = film.rating!.toString();
