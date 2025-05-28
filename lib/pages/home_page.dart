@@ -14,16 +14,28 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Future<List<Film>> _filmList;
+  String username = '';
 
   @override
   void initState() {
     super.initState();
+    _loadUsername();
     _filmList = FilmService.getFilms();
+    
   }
+  
 
   void _refresh() {
     setState(() {
       _filmList = FilmService.getFilms();
+    });
+  }
+
+  Future<void> _loadUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedUsername = prefs.getString('username') ?? '';
+    setState(() {
+      username = savedUsername;
     });
   }
 
@@ -41,7 +53,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: const Color(0xFFF6F1F1),
       appBar: AppBar(
-  title: const Text("Halo, [123220202]"),
+  title: Text('Halo, [$username]'),
   centerTitle: true,
   actions: [
   IconButton(

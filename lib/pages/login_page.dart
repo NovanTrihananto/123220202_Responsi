@@ -17,9 +17,10 @@ class _LoginPageState extends State<LoginPage> {
     final password = _passwordController.text;
 
     // Dummy user
-    if (username == 'admin' && password == 'admin123') {
+    if (username == '123220202' && password == '12345678') {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
+       await prefs.setString('username', username);  // Simpan username
 
       if (context.mounted) {
         Navigator.pushReplacementNamed(context, '/home');
@@ -49,10 +50,7 @@ class _LoginPageState extends State<LoginPage> {
               obscureText: true,
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _login,
-              child: const Text("Login"),
-            ),
+            ElevatedButton(onPressed: _login, child: const Text("Login")),
           ],
         ),
       ),
