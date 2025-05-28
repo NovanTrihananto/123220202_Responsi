@@ -31,14 +31,14 @@ class _CreatePageState extends State<CreatePage> {
         director: _directorController.text,
         rating: double.tryParse(_ratingController.text),
         synopsis: _synopsisController.text,
-        imgUrl: "", // default kosong
-        movieUrl: "", // default kosong
+        imgUrl: "",
+        movieUrl: "", 
       );
 
       try {
         await FilmService.post(film);
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Film berhasil ditambahkan')));
-        Navigator.pop(context); // Kembali ke HomePage
+        Navigator.pop(context); 
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
       } finally {
