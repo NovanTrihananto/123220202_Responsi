@@ -20,7 +20,7 @@ class DetailPage extends StatelessWidget {
   }
 
   Widget _filmDetail() {
-    return FutureBuilder<FilmData>(
+    return FutureBuilder<Film>(
       future: FilmService.getFilmById(id),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
@@ -34,7 +34,7 @@ class DetailPage extends StatelessWidget {
     );
   }
 
-  Widget _filmWidget(FilmData film) {
+  Widget _filmWidget(Film film) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

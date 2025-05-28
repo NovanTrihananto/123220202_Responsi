@@ -4,57 +4,53 @@ import 'package:responsi/model/film_model.dart';
 
 class FilmService {
   static const url =
-      'https://tpm-api-responsi-a-h-872136705893.us-central1.run.app/api/v1/film';
+      'https://tpm-api-responsi-a-h-872136705893.us-central1.run.app/api/v1/movies';
 
-  static Future<List<FilmData>> getFilms() async {
-    // Mengirim GET request ke url, kemudian disimpan ke dalam variabel "response"
-    final response = await http.get(Uri.parse(url));
-    return jsonDecode(response.body);
-  }
-
-  // GET film by ID
-  static Future<FilmData> getFilmById(int id) async {
+  static Future<List<Film>> getFilms() async {
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonData = jsonDecode(response.body);
-      return FilmData.fromJson(jsonData['data']);
+      final List<dynamic> filmList = jsonData['data']; // akses list film
+      return filmList
+          .map((e) => Film.fromJson(e))
+          .toList(); // konversi ke List<FilmData>
+    } else {
+      throw Exception('Failed to load films');
+    }
+  }
+
+  // GET film by ID
+  static Future<Film> getFilmById(int id) async {
+    final response = await http.get(Uri.parse('$url/$id'));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> jsonData = jsonDecode(response.body);
+      return Film.fromJson(jsonData['data']);
     } else {
       throw Exception('Failed to load film');
     }
   }
 
   // POST film baru
-  static Future<FilmModel> addFilm(FilmData film) async {
+  static Future<Map<String,dynamic>> post(Film film) async {
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(film.toJson()),
     );
-
-    if (response.statusCode == 201 || response.statusCode == 200) {
-      return FilmModel.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to add film');
-    }
+        return jsonDecode(response.body);
   }
 
   // PUT update film
-  static Future<FilmModel> updateFilm(FilmData film) async {
-    if (film.id == null) throw Exception("Film ID is required for update.");
-
-    final response = await http.put(
-      Uri.parse('$url/${film.id}'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode(film.toJson()),
-    );
-
-    if (response.statusCode == 200) {
-      return FilmModel.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to update film');
-    }
-  }
+  static Future<Map<String, dynamic>> updateFilm(Film updateFilm) async {
+  final response = await http.patch(
+    Uri.parse("$url/${updateFilm.id}"),
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode(updateFilm.toJson()), // <- fix di sini
+  );
+    return jsonDecode(response.body);
+}
 
   // DELETE film
   static Future<FilmModel> deleteFilm(int id) async {

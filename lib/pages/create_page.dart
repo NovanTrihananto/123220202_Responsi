@@ -24,7 +24,7 @@ class _CreatePageState extends State<CreatePage> {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
 
-      final film = FilmData(
+      final film = Film(
         title: _titleController.text,
         year: int.tryParse(_yearController.text),
         genre: _genreController.text,
@@ -36,7 +36,7 @@ class _CreatePageState extends State<CreatePage> {
       );
 
       try {
-        await FilmService.addFilm(film);
+        await FilmService.post(film);
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Film berhasil ditambahkan')));
         Navigator.pop(context); // Kembali ke HomePage
       } catch (e) {

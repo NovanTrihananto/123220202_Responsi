@@ -3,6 +3,7 @@ import 'package:responsi/model/film_model.dart';
 import 'package:responsi/services/api_service.dart';
 import 'package:responsi/pages/detail_page.dart';
 import 'package:responsi/pages/edit_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,7 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late Future<List<FilmData>> _filmList;
+  late Future<List<Film>> _filmList;
 
   @override
   void initState() {
@@ -26,15 +27,40 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> _logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    if (context.mounted) {
+      Navigator.pushReplacementNamed(context, '/login');
+    }
+  }
+
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF6F1F1),
       appBar: AppBar(
-        title: const Text("Halo, [123220202]"),
-        centerTitle: true,
-      ),
-      body: FutureBuilder<List<FilmData>>(
+  title: const Text("Halo, [123220202]"),
+  centerTitle: true,
+  actions: [
+  IconButton(
+    icon: const Icon(Icons.add),
+    tooltip: 'Tambah Film',
+    onPressed: () {
+      Navigator.pushNamed(context, '/create').then((_) => _refresh());
+    },
+  ),
+  IconButton(
+    icon: const Icon(Icons.logout),
+    tooltip: 'Logout',
+    onPressed: () => _logout(context),
+  ),
+],
+
+),
+
+      body: FutureBuilder<List<Film>>(
         future: _filmList,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
@@ -104,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (_) => EditPage(film: film),
+                                            builder: (_) => EditFilmPage(id: film.id!),
                                           ),
                                         ).then((_) => _refresh());
                                       }),
@@ -131,12 +157,6 @@ class _HomePageState extends State<HomePage> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/create').then((_) => _refresh());
-        },
-        child: const Icon(Icons.add),
-      ),
     );
   }
 
@@ -154,3 +174,5 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+

@@ -1,54 +1,33 @@
 class FilmModel {
   String? status;
   String? message;
-  FilmData? data;
+  List<Film>? data;
 
   FilmModel({this.status, this.message, this.data});
 
   FilmModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
-    data = json['data'] != null ? FilmData.fromJson(json['data']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> result = {};
-    result['status'] = status;
-    result['message'] = message;
-    if (data != null) {
-      result['data'] = data!.toJson();
-    }
-    return result;
-  }
-}
-
-class FilmList {
-  String? status;
-  String? message;
-  List<FilmData>? data;
-
-  FilmList({this.status, this.message, this.data});
-
-  FilmList.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    message = json['message'];
     if (json['data'] != null) {
-      data = List<FilmData>.from(json['data'].map((x) => FilmData.fromJson(x)));
+      data = <Film>[];
+      json['data'].forEach((v) {
+        data!.add(Film.fromJson(v));
+      });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> result = {};
-    result['status'] = status;
-    result['message'] = message;
-    if (data != null) {
-      result['data'] = data!.map((x) => x.toJson()).toList();
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    data['message'] = this.message;
+    if (this.data != null) {
+      data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
-    return result;
+    return data;
   }
 }
 
-class FilmData {
+class Film {
   int? id;
   String? title;
   int? year;
@@ -59,23 +38,22 @@ class FilmData {
   String? synopsis;
   String? movieUrl;
 
-  FilmData({
-    this.id,
-    this.title,
-    this.year,
-    this.rating,
-    this.imgUrl,
-    this.genre,
-    this.director,
-    this.synopsis,
-    this.movieUrl,
-  });
+  Film(
+      {this.id,
+      this.title,
+      this.year,
+      this.rating,
+      this.imgUrl,
+      this.genre,
+      this.director,
+      this.synopsis,
+      this.movieUrl});
 
-  FilmData.fromJson(Map<String, dynamic> json) {
+  Film.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
     year = json['year'];
-    rating = (json['rating'] is int) ? (json['rating'] as int).toDouble() : json['rating'];
+    rating = json['rating'] != null ? (json['rating'] as num).toDouble() : null;
     imgUrl = json['imgUrl'];
     genre = json['genre'];
     director = json['director'];
@@ -84,16 +62,16 @@ class FilmData {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    data['id'] = id;
-    data['title'] = title;
-    data['year'] = year;
-    data['rating'] = rating;
-    data['imgUrl'] = imgUrl;
-    data['genre'] = genre;
-    data['director'] = director;
-    data['synopsis'] = synopsis;
-    data['movieUrl'] = movieUrl;
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['title'] = this.title;
+    data['year'] = this.year;
+    data['rating'] = this.rating;
+    data['imgUrl'] = this.imgUrl;
+    data['genre'] = this.genre;
+    data['director'] = this.director;
+    data['synopsis'] = this.synopsis;
+    data['movieUrl'] = this.movieUrl;
     return data;
   }
 }
